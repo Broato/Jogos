@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+<meta charset="UTF-8">
+<title>Canoagem Épica</title>
+<style>
+  body { font-family: Arial; background-color: #f0f8ff; padding: 20px; }
+  #chat { margin-bottom: 20px; }
+  .mensagem { margin: 10px 0; }
+  .usuario { color: #ff9900; font-weight: bold; }
+  .bot { color: #0066cc; }
+  input[type="text"] { padding: 5px; width: 300px; }
+  button { padding: 5px 10px; margin: 5px; }
+</style>
+</head>
+<body>
+<h1>PARTIU CANOAGEM ÉPICA! 🛶✨</h1>
+<div id="chat"></div>
+<input type="text" id="resposta" placeholder="Escreve aqui..." />
+<button id="enviar">Enviar</button>
+
+<script>
+const chat = document.getElementById('chat');
+const input = document.getElementById('resposta');
+const btn = document.getElementById('enviar');
+
+function escrever(texto, classe='bot') {
+    const div = document.createElement('div');
+    div.className = `mensagem ${classe}`;
+    div.innerHTML = texto;
+    chat.appendChild(div);
+    chat.scrollTop = chat.scrollHeight;
+}
+
+function limparInput() {
+    input.value = '';
+}
+
+function resetarJogo() {
+    chat.innerHTML = '';
+    etapa = 0;
+    nomeCanoador = '';
+    tipoCanoa = '';
+    mostrarInput(true);
+    proximaEtapa();
+}
+
+function mostrarInput(mostrar) {
+    input.style.display = mostrar ? 'inline-block' : 'none';
+    btn.style.display = mostrar ? 'inline-block' : 'none';
+}
+
+let etapa = 0;
+let nomeCanoador = '';
+let tipoCanoa = '';
+
+function proximaEtapa() {
+    const resposta = input.value.trim();
+    limparInput();
+
+    switch(etapa) {
+        case 0:
+            escrever("Antes de começarmos, diz-me o teu nome de canoador:");
+            etapa++;
+            break;
+        case 1:
+            if(resposta === '') { escrever("Escreve o teu nome!"); return; }
+            nomeCanoador = resposta;
+            escrever(`<span class="usuario">${nomeCanoador}</span>`);
+            escrever(`Muito bem, ${nomeCanoador}! Escolhe a tua canoa: Canoa do Tiago, Canoa Ouro Brasileiro ou Canoa de Aura.`);
+            etapa++;
+            break;
+        case 2:
+            if(resposta === '') { escrever("Escolhe uma canoa!"); return; }
+            tipoCanoa = resposta;
+            escrever(`<span class="usuario">${tipoCanoa}</span>`);
+            if(tipoCanoa === "Canoa do Tiago") {
+                escrever("Oh não! O Kruger saltou para cima da canoa e afundou! 💀");
+                mostrarInput(false);
+                const botao = document.createElement('button');
+                botao.innerText = "Respawn!";
+                botao.onclick = resetarJogo;
+                chat.appendChild(botao);
+            } else if(tipoCanoa === "Canoa Ouro Brasileiro") {
+                escrever("Escolheste a Canoa Ouro Brasileiro! Vamos começar a canoagem!");
+                mostrarInput(false);
+                setTimeout(perguntaElfo, 1000);
+            } else if(tipoCanoa === "Canoa de Aura") {
+                escrever("Escolheste a Canoa de Aura! 🌌 Teletransporte para o plano astral...");
+                mostrarInput(false);
+                setTimeout(planoAstral, 1000);
+            } else {
+                escrever("Opção inválida. Por favor, escolha uma canoa válida.");
+            }
+            break;
+    }
+}
+
+// --- Canoa Ouro Brasileiro ---
+function perguntaElfo() {
+    escrever("Um elfo grego bloqueia a passagem e pergunta: Quem é a pessoa com mais aura do mundo?");
+    const opcoes = ["Broato", "Papai Diogo Games", "Cristiano Ronaldo", "Todos os que foram mencionados"];
+    opcoes.forEach(op => {
+        const botao = document.createElement('button');
+        botao.innerText = op;
+        botao.onclick = () => {
+            escrever(`<span class="usuario">${op}</span>`);
+            if(op === "Todos os que foram mencionados") {
+                escrever("Correto! Mas o elfo havia prometido que NUNCA MAIS abria a passagem para os betas. 🚫");
+                const resetBtn = document.createElement('button');
+                resetBtn.innerText = "Resetar Canoagem";
+                resetBtn.onclick = resetarJogo;
+                chat.appendChild(resetBtn);
+            } else {
+                escrever("Errado! O elfo bloqueia a passagem. 😅 Tenta de novo.");
+                const resetBtn = document.createElement('button');
+                resetBtn.innerText = "Resetar Canoagem";
+                resetBtn.onclick = resetarJogo;
+                chat.appendChild(resetBtn);
+            }
+        };
+        chat.appendChild(botao);
+    });
+}
+
+// --- Canoa de Aura ---
+function planoAstral() {
+    escrever("Encontras o deus Broato! Ele pergunta: Qual é o número com mais aura da história?");
+    const inputNumero = document.createElement('input');
+    inputNumero.type = 'text';
+    inputNumero.placeholder = "Escreve um número";
+    const botaoNumero = document.createElement('button');
+    botaoNumero.innerText = "Enviar";
+    botaoNumero.onclick = () => {
+        const numero = inputNumero.value.trim();
+        escrever(`<span class="usuario">${numero}</span>`);
+        inputNumero.remove();
+        botaoNumero.remove();
+        if(numero === "67") {
+            escrever("Correto! Broato sorri e diz que foste o único que completou a canoagem! 😎✨");
+            const botaoAura = document.createElement('button');
+            botaoAura.innerText = "Clica para coletares a aura eterna";
+            botaoAura.onclick = () => window.location.href="https://youtu.be/Aq5WXmQQooo";
+            chat.appendChild(botaoAura);
+        } else {
+            escrever("Errado! Broato fica irritado e solta um peido aurástico que destrói o plano astral. 💨💥");
+            const resetBtn = document.createElement('button');
+            resetBtn.innerText = "Resetar Canoagem";
+            resetBtn.onclick = resetarJogo;
+            chat.appendChild(resetBtn);
+        }
+    };
+    chat.appendChild(inputNumero);
+    chat.appendChild(botaoNumero);
+}
+
+btn.addEventListener('click', proximaEtapa);
+input.addEventListener('keydown', (e) => { if(e.key === 'Enter') proximaEtapa(); });
+
+// Início
+proximaEtapa();
+</script>
+</body>
+</html>
