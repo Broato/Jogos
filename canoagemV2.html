@@ -2,7 +2,7 @@
 <html lang="pt">
 <head>
 <meta charset="UTF-8">
-<title>Canoagem Épica</title>
+<title>Canoagem Épica - Final</title>
 
 <style>
 body {
@@ -39,33 +39,42 @@ button {
   width: 0%;
   background: yellow;
 }
+
+#inputBox {
+  margin-top: 10px;
+  padding: 10px;
+  width: 80%;
+  border-radius: 8px;
+  border: none;
+}
 </style>
 </head>
 
 <body>
 
 <div id="box">
+  <h1>🛶 Canoagem Épica</h1>
+  <p>Objetivo: ganha a Aura Eterna</p>
 
-<h1>🛶 Canoagem Épica</h1>
-<p>Objetivo: ganha a Aura Eterna</p>
+  <div id="barra"><div id="aura"></div></div>
+  <p id="auraTxt">Aura: 0</p>
 
-<div id="barra"><div id="aura"></div></div>
-<p id="auraTxt">Aura: 0</p>
+  <div id="chat"></div>
+  <div id="botoes"></div>
 
-<div id="chat"></div>
-<div id="botoes"></div>
-
+  <input id="inputBox" placeholder="Escreve aqui..." />
+  <button onclick="responder()">Enviar</button>
 </div>
 
 <script>
-
 let aura = 0;
+let modo = ""; // controla se estamos no input
 
+// --- FUNÇÕES AUXILIARES ---
 function setAura(valor){
   aura += valor;
   if(aura < 0) aura = 0;
   if(aura > 100) aura = 100;
-
   document.getElementById("aura").style.width = aura + "%";
   document.getElementById("auraTxt").innerText = "Aura: " + aura;
 }
@@ -74,6 +83,7 @@ function escrever(txt){
   let div = document.createElement("div");
   div.innerHTML = txt;
   document.getElementById("chat").appendChild(div);
+  document.getElementById("chat").scrollTop = document.getElementById("chat").scrollHeight;
 }
 
 function limparBotoes(){
@@ -87,25 +97,25 @@ function criarBotao(txt, func){
   document.getElementById("botoes").appendChild(b);
 }
 
-// --- INÍCIO ---
+// --- JOGO ---
 function start(){
-  escrever("Bem-vindo à canoagem!");
+  escrever("Bem-vindo à Canoagem Épica!");
   escrever("Escolhe a tua canoa:");
   limparBotoes();
-
   criarBotao("Canoa do Tiago", canoaTiago);
   criarBotao("Canoa Ouro", canoaOuro);
   criarBotao("Canoa de Aura", canoaAura);
 }
 
-// --- CAMINHOS ---
+// Caminho Canoa do Tiago
 function canoaTiago(){
   limparBotoes();
   escrever("💀 A canoa afundou e perdeste toda a tua aura...");
-  setAura(-9999999);
+  setAura(-999);
   criarBotao("Respawn", reset);
 }
 
+// Caminho Canoa Ouro
 function canoaOuro(){
   limparBotoes();
   escrever("🌳 Um elfo grego bloqueia o caminho.");
@@ -115,7 +125,7 @@ function canoaOuro(){
   criarBotao("Cristiano Ronaldo", falhaElfo);
   criarBotao("Papai Diogo Games", falhaElfo);
   criarBotao("El Pepe", falhaElfo);
- c riarBotao("Diéééééégo", falhaElfo);
+  criarBotao("Diéééééégo", falhaElfo);
   criarBotao("Nigga da Venezuela", falhaElfo);
   criarBotao("Todos os mencionados", certoElfo);
 }
@@ -123,42 +133,41 @@ function canoaOuro(){
 function falhaElfo(){
   limparBotoes();
   escrever("❌ Errado! O elfo não te deixa passar.");
-  setAura(-100);
+  setAura(-50);
   criarBotao("Resetar", reset);
 }
 
 function certoElfo(){
   limparBotoes();
-  escrever("😈 Certo... mas ele prometeu NUNCA MAIS deixar passar um betinha.");
+  escrever("😈 Certo! Mas ele prometeu NUNCA MAIS deixar passar um betinha.");
   criarBotao("Resetar", reset);
 }
 
+// Caminho Canoa de Aura
 function canoaAura(){
   limparBotoes();
-  escrever("🌌 teletrasportando para Plano astral...");
-  escrever("Deus Broato pergunta")
+  escrever("🌌 Teletransportando para o Plano Astral...");
+  escrever("👑 Deus Broato pergunta:");
   escrever("Qual é o número com mais aura?");
-  
-  let input = document.createElement("input");
-  let btn = document.createElement("button");
+  modo = "aura";
+}
 
-  btn.innerText = "Responder";
-
-  btn.onclick = () => {
-    if(input.value == "67"){
+// --- INPUT ---
+function responder(){
+  let val = document.getElementById("inputBox").value.trim();
+  if(modo === "aura"){
+    if(val == "67"){
       escrever("✨ És digno!");
-      escrever("Aproveita a AURA ETERNA");
-      setAura(6767676767676767);
+      escrever("Aproveita a AURA ETERNA!");
+      setAura(100);
       final("DEUS SUPREMO 🟡");
     } else {
-      escrever("💨 Plano astral é brutalmente destruído...");
-      setAura(-67000);
+      escrever("💨 Plano astral é destruído...");
+      setAura(0);
       criarBotao("Resetar", reset);
     }
-  };
-
-  document.getElementById("botoes").appendChild(input);
-  document.getElementById("botoes").appendChild(btn);
+  }
+  document.getElementById("inputBox").value = "";
 }
 
 // --- FINAL ---
@@ -172,10 +181,9 @@ function reset(){
   location.reload();
 }
 
-// START
+// --- START ---
 start();
 
 </script>
-
 </body>
 </html>
