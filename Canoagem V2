@@ -1,1 +1,223 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+<meta charset="UTF-8">
+<title>Canoagem Épica</title>
 
+<style>
+body {
+  font-family: Arial;
+  background: linear-gradient(to bottom, #87ceeb, #001f3f);
+  color: white;
+  padding: 20px;
+}
+
+#chat { margin-bottom: 20px; }
+.mensagem { margin: 10px 0; }
+
+button {
+  padding: 8px 12px;
+  margin: 5px;
+  border: none;
+  cursor: pointer;
+  border-radius: 8px;
+  transition: 0.2s;
+}
+
+button:hover {
+  transform: scale(1.1);
+}
+
+.botao-ouro { background: gold; color: black; }
+.botao-aura { background: purple; color: white; }
+.botao-erro { background: red; color: white; }
+
+#barraAura {
+  height: 20px;
+  background: gray;
+  margin-bottom: 10px;
+}
+
+#aura {
+  height: 100%;
+  width: 0%;
+  background: yellow;
+}
+
+</style>
+</head>
+
+<body>
+
+<h1>🛶 Canoagem Épica</h1>
+
+<div id="barraAura"><div id="aura"></div></div>
+
+<div id="chat"></div>
+
+<input type="text" id="input">
+<button onclick="enviar()">Enviar</button>
+
+<script>
+let aura = localStorage.getItem("aura") || 0;
+let dinheiro = localStorage.getItem("dinheiro") || 0;
+let etapa = 0;
+
+const chat = document.getElementById("chat");
+const auraBar = document.getElementById("aura");
+
+function atualizarAura(valor){
+  aura = parseInt(aura) + valor;
+  if(aura < 0) aura = 0;
+  if(aura > 100) aura = 100;
+  auraBar.style.width = aura + "%";
+  localStorage.setItem("aura", aura);
+}
+
+function escrever(texto){
+  let div = document.createElement("div");
+  div.className = "mensagem";
+  chat.appendChild(div);
+
+  let i = 0;
+  let intervalo = setInterval(() => {
+    div.innerHTML += texto[i];
+    i++;
+    if(i >= texto.length) clearInterval(intervalo);
+  }, 20);
+}
+
+function botao(txt, func, classe=""){
+  let b = document.createElement("button");
+  b.innerText = txt;
+  b.className = classe;
+  b.onclick = func;
+  chat.appendChild(b);
+}
+
+function enviar(){
+  let val = document.getElementById("input").value;
+  document.getElementById("input").value = "";
+
+  if(val.toLowerCase() === "67"){
+    escrever("😳 Easter Egg ativado... saltaste tudo!");
+    final("DEUS SUPREMO");
+    return;
+  }
+
+  if(etapa === 0){
+    nome = val;
+    escrever("Bem-vindo " + nome);
+    etapa = 1;
+    escolhaCanoa();
+  }
+}
+
+function escolhaCanoa(){
+  escrever("Escolhe a tua canoa:");
+  botao("Canoa do Tiago", () => tiago(), "botao-erro");
+  botao("Canoa Ouro", () => ouro(), "botao-ouro");
+  botao("Canoa de Aura", () => auraPath(), "botao-aura");
+}
+
+function tiago(){
+  escrever("💀 A canoa afundou porque o Kruger saltou!");
+  atualizarAura(-20);
+  botao("Respawn", resetar);
+}
+
+function ouro(){
+  escrever("🌳 Um elfo aparece...");
+  escolhasElfo();
+}
+
+function escolhasElfo(){
+  escrever("Quem tem mais aura?");
+  botao("Broato", () => falhaElfo());
+  botao("Papai Diogo Games", () => falhaElfo());
+  botao("Cristiano Ronaldo", () => falhaElfo());
+  botao("Todos", () => certoElfo());
+}
+
+function falhaElfo(){
+  escrever("❌ Errado! O elfo bloqueia tudo!");
+  atualizarAura(-10);
+  botao("Resetar", resetar);
+}
+
+function certoElfo(){
+  escrever("😈 Certo... mas nunca deixo passar betas!");
+  botao("Resetar", resetar);
+}
+
+function auraPath(){
+  escrever("🌌 Plano Astral...");
+  perguntaBroato();
+}
+
+function perguntaBroato(){
+  escrever("Número com mais aura?");
+  let input = document.createElement("input");
+  let btn = document.createElement("button");
+
+  btn.innerText = "Enviar";
+
+  btn.onclick = () => {
+    if(input.value == "67"){
+      atualizarAura(50);
+      escrever("✨ És digno!");
+      dinheiro += 100;
+      localStorage.setItem("dinheiro", dinheiro);
+      loja();
+    } else {
+      escrever("💨 Peido aurástico destruiu tudo!");
+      atualizarAura(-50);
+      botao("Resetar", resetar);
+    }
+  }
+
+  chat.appendChild(input);
+  chat.appendChild(btn);
+}
+
+function loja(){
+  escrever("🛒 Loja de Chapéus (dinheiro: " + dinheiro + ")");
+  
+  botao("Chapéu do Tiago (50)", () => comprar(50));
+  botao("Chapéu do Anão (75)", () => comprar(75));
+  botao("Chapéu Supremo (100)", () => comprar(100));
+
+  botao("Finalizar Jogo", () => finalRanking());
+}
+
+function comprar(preco){
+  if(dinheiro >= preco){
+    dinheiro -= preco;
+    localStorage.setItem("dinheiro", dinheiro);
+    escrever("Comprado!");
+  } else {
+    escrever("💀 Pobre...");
+  }
+}
+
+function finalRanking(){
+  if(aura < 20) final("Beta total 💀");
+  else if(aura < 50) final("Canoista normal");
+  else if(aura < 80) final("Mestre da Aura");
+  else final("DEUS SUPREMO 🟡");
+}
+
+function final(rank){
+  escrever("🏁 Ranking: " + rank);
+}
+
+function resetar(){
+  location.reload();
+}
+
+atualizarAura(0);
+escrever("Qual o teu nome?");
+</script>
+
+</body>
+</html>
