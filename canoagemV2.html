@@ -13,7 +13,7 @@ body {
   padding: 20px;
 }
 
-#container {
+#box {
   background: rgba(0,0,0,0.7);
   padding: 20px;
   border-radius: 15px;
@@ -21,13 +21,9 @@ body {
   margin: auto;
 }
 
-#chat {
-  margin-bottom: 20px;
-}
-
 button {
-  padding: 10px;
   margin: 5px;
+  padding: 10px;
   border-radius: 10px;
   border: none;
   cursor: pointer;
@@ -36,7 +32,6 @@ button {
 #barra {
   background: gray;
   height: 20px;
-  margin-bottom: 10px;
 }
 
 #aura {
@@ -44,126 +39,136 @@ button {
   width: 0%;
   background: yellow;
 }
-
 </style>
 </head>
 
 <body>
 
-<div id="container">
+<div id="box">
 
 <h1>🛶 Canoagem Épica</h1>
+<p>Objetivo: ganha a Aura Eterna</p>
 
-<p><b>Objetivo:</b> Escolhe a melhor canoa e completa a jornada para ganhar a <b>Aura Eterna</b>.</p>
-
-<div id="barra"></div>
-<div id="aura"></div>
-<p id="auraTexto">Aura: 0</p>
+<div id="barra"><div id="aura"></div></div>
+<p id="auraTxt">Aura: 0</p>
 
 <div id="chat"></div>
-
-<input id="input" placeholder="Escreve aqui...">
-<button onclick="responder()">Enviar</button>
+<div id="botoes"></div>
 
 </div>
 
 <script>
 
-let etapa = 0;
-let nome = "";
 let aura = 0;
 
-function atualizarAura(valor){
+function setAura(valor){
   aura += valor;
   if(aura < 0) aura = 0;
   if(aura > 100) aura = 100;
 
   document.getElementById("aura").style.width = aura + "%";
-  document.getElementById("auraTexto").innerText = "Aura: " + aura;
+  document.getElementById("auraTxt").innerText = "Aura: " + aura;
 }
 
-function escrever(texto){
+function escrever(txt){
   let div = document.createElement("div");
-  div.innerHTML = texto;
+  div.innerHTML = txt;
   document.getElementById("chat").appendChild(div);
 }
 
-function limpar(){
-  document.getElementById("input").value = "";
+function limparBotoes(){
+  document.getElementById("botoes").innerHTML = "";
 }
 
-function responder(){
-  let val = document.getElementById("input").value;
-  limpar();
-
-  if(etapa === 0){
-    nome = val;
-    escrever("👤 " + nome);
-    escrever("Bem-vindo à canoagem, " + nome + "!");
-    escrever("Escolhe uma canoa:");
-    criarBotoes(["Canoa do Tiago","Canoa Ouro","Canoa de Aura"]);
-    etapa = 1;
-  }
+function criarBotao(txt, func){
+  let b = document.createElement("button");
+  b.innerText = txt;
+  b.onclick = func;
+  document.getElementById("botoes").appendChild(b);
 }
 
-function criarBotoes(lista){
-  lista.forEach(op => {
-    let b = document.createElement("button");
-    b.innerText = op;
-    b.onclick = () => escolha(op);
-    document.getElementById("chat").appendChild(b);
-  });
+// --- INÍCIO ---
+function start(){
+  escrever("Bem-vindo à canoagem!");
+  escrever("Escolhe a tua canoa:");
+  limparBotoes();
+
+  criarBotao("Canoa do Tiago", canoaTiago);
+  criarBotao("Canoa Ouro", canoaOuro);
+  criarBotao("Canoa de Aura", canoaAura);
 }
 
-function escolha(op){
-  escrever("👉 " + op);
-
-  if(op === "Canoa do Tiago"){
-    escrever("💀 A canoa afundou imediatamente!");
-    atualizarAura(-20);
-    fim("Beta total 💀");
-  }
-
-  if(op === "Canoa Ouro"){
-    escrever("🌳 Encontras um elfo guardião.");
-    escrever("Pergunta: Quem tem mais aura?");
-    criarBotoes(["Broato","Cristiano Ronaldo","Todos"]);
-  }
-
-  if(op === "Canoa de Aura"){
-    escrever("🌌 Foste para o plano astral.");
-    escrever("Deus Broato pergunta: número com mais aura?");
-    etapa = 2;
-  }
+// --- CAMINHOS ---
+function canoaTiago(){
+  limparBotoes();
+  escrever("💀 A canoa afundou! Kruger destruiu tudo.");
+  setAura(-20);
+  criarBotao("Respawn", reset);
 }
 
-document.getElementById("input").addEventListener("keydown", e => {
-  if(e.key === "Enter") responderExtra();
-});
+function canoaOuro(){
+  limparBotoes();
+  escrever("🌳 Um elfo bloqueia o caminho.");
+  escrever("Pergunta: Quem tem mais aura?");
+  
+  criarBotao("Broato", falhaElfo);
+  criarBotao("Cristiano Ronaldo", falhaElfo);
+  criarBotao("Todos", certoElfo);
+}
 
-function responderExtra(){
-  let val = document.getElementById("input").value;
-  limpar();
+function falhaElfo(){
+  limparBotoes();
+  escrever("❌ Errado! O elfo não te deixa passar.");
+  setAura(-10);
+  criarBotao("Resetar", reset);
+}
 
-  if(etapa === 2){
-    escrever("👉 " + val);
-    if(val === "67"){
-      atualizarAura(100);
-      escrever("✨ Completaste a jornada!");
-      fim("DEUS SUPREMO 🟡");
+function certoElfo(){
+  limparBotoes();
+  escrever("😈 Certo... mas ele prometeu nunca deixar passar.");
+  criarBotao("Resetar", reset);
+}
+
+function canoaAura(){
+  limparBotoes();
+  escrever("🌌 Plano astral...");
+  escrever("Qual é o número com mais aura?");
+  
+  let input = document.createElement("input");
+  let btn = document.createElement("button");
+
+  btn.innerText = "Responder";
+
+  btn.onclick = () => {
+    if(input.value == "67"){
+      escrever("✨ És digno!");
+      setAura(100);
+      final("DEUS SUPREMO 🟡");
     } else {
-      escrever("💨 Plano astral destruído!");
-      atualizarAura(-50);
-      fim("Falhaste...");
+      escrever("💨 Tudo destruído...");
+      setAura(-50);
+      criarBotao("Resetar", reset);
     }
-  }
+  };
+
+  document.getElementById("botoes").appendChild(input);
+  document.getElementById("botoes").appendChild(btn);
 }
 
-function fim(rank){
-  escrever("<br><b>🏁 Resultado: " + rank + "</b>");
+// --- FINAL ---
+function final(rank){
+  limparBotoes();
+  escrever("<br><b>🏁 Ranking: " + rank + "</b>");
 }
 
-escrever("Qual é o teu nome?");
+// --- RESET ---
+function reset(){
+  location.reload();
+}
+
+// START
+start();
+
 </script>
 
 </body>
