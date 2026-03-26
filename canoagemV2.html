@@ -7,7 +7,7 @@
 <style>
 body {
   font-family: Arial;
-  background: url("https://images.unsplash.com/photo-1507525428034-b723cf961d3e");
+  background: url("https://img.nauticexpo.com/pt/images_ne/photo-mg/20958-7293715.jpg");
   background-size: cover;
   color: white;
   padding: 20px;
@@ -101,37 +101,42 @@ function start(){
 // --- CAMINHOS ---
 function canoaTiago(){
   limparBotoes();
-  escrever("💀 A canoa afundou! Kruger destruiu tudo.");
-  setAura(-20);
+  escrever("💀 A canoa afundou e perdeste toda a tua aura...");
+  setAura(-9999999);
   criarBotao("Respawn", reset);
 }
 
 function canoaOuro(){
   limparBotoes();
-  escrever("🌳 Um elfo bloqueia o caminho.");
+  escrever("🌳 Um elfo grego bloqueia o caminho.");
   escrever("Pergunta: Quem tem mais aura?");
   
   criarBotao("Broato", falhaElfo);
   criarBotao("Cristiano Ronaldo", falhaElfo);
-  criarBotao("Todos", certoElfo);
+  criarBotao("Papai Diogo Games", falhaElfo);
+  criarBotao("El Pepe", falhaElfo);
+ c riarBotao("Diéééééégo", falhaElfo);
+  criarBotao("Nigga da Venezuela", falhaElfo);
+  criarBotao("Todos os mencionados", certoElfo);
 }
 
 function falhaElfo(){
   limparBotoes();
   escrever("❌ Errado! O elfo não te deixa passar.");
-  setAura(-10);
+  setAura(-100);
   criarBotao("Resetar", reset);
 }
 
 function certoElfo(){
   limparBotoes();
-  escrever("😈 Certo... mas ele prometeu nunca deixar passar.");
+  escrever("😈 Certo... mas ele prometeu NUNCA MAIS deixar passar um betinha.");
   criarBotao("Resetar", reset);
 }
 
 function canoaAura(){
   limparBotoes();
-  escrever("🌌 Plano astral...");
+  escrever("🌌 teletrasportando para Plano astral...");
+  escrever("Deus Broato pergunta")
   escrever("Qual é o número com mais aura?");
   
   let input = document.createElement("input");
@@ -142,11 +147,12 @@ function canoaAura(){
   btn.onclick = () => {
     if(input.value == "67"){
       escrever("✨ És digno!");
-      setAura(100);
+      escrever("Aproveita a AURA ETERNA");
+      setAura(6767676767676767);
       final("DEUS SUPREMO 🟡");
     } else {
-      escrever("💨 Tudo destruído...");
-      setAura(-50);
+      escrever("💨 Plano astral é brutalmente destruído...");
+      setAura(-67000);
       criarBotao("Resetar", reset);
     }
   };
